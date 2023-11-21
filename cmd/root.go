@@ -16,12 +16,22 @@ var rootCmd = &cobra.Command{
 	Short: "Luxafor CLI tool",
 	Long: `A tool to turn on DND via a cli tool.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flagVal, err := cmd.Flags().GetBool("toggle");
+		on, err := cmd.Flags().GetBool("dnd-on");
 		if err != nil {
 			return
 		}
-		if flagVal {
-			fmt.Println("Toggle DND");
+		luxafor := NewLuxafor()
+		defer luxafor.Close()
+
+		if on {
+			fmt.Println("DND on");
+			luxafor.Colour(LedAll, 8, 0 , 0, 0)
+			return
+		}
+
+		if on {
+			fmt.Println("DND off");
+			luxafor.Colour(LedAll, 0, 8 , 0, 0)
 			return
 		}
 		fmt.Println("Hello World");
@@ -38,7 +48,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolP("toggle", "t", false, "Toggle luxafor dnd status")
+	rootCmd.Flags().BoolP("dnd-on", "o", false, "Turn dnd on")
+	rootCmd.Flags().BoolP("dnd-off", "f", false, "Turn dnd off")
 }
 
 
